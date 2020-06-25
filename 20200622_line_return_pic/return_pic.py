@@ -88,8 +88,6 @@ def handle_image(event):
 
     # ▼ send image
     # I feel it's a bad idea to specify a 3rd argument.
-    # send_messagae(message_id, preserved_image_path, event).start()
-    # send_messagae(message_id, preserved_image_path, event).join()
     send_messagae(message_id, preserved_image_path, event)
 
     # ▼ del picture
