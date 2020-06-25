@@ -10,6 +10,8 @@ from linebot.models import MessageEvent, TextMessage, TextSendMessage
 from linebot.models import ImageMessage
 from linebot.models import ImageSendMessage
 
+import atexit
+
 THIS_REPO = "20200622_line_return_pic"
 SOURCE_IMAGE_PATH = THIS_REPO + "/static/images/{}.jpg"
 PRESERVED_IMAGE_PATH = "/static/images/{}.jpg"
@@ -86,11 +88,12 @@ def handle_image(event):
 
     # ▼ send image
     # I feel it's a bad idea to specify a 3rd argument.
-    send_messagae(message_id, preserved_image_path, event).start()
-    send_messagae(message_id, preserved_image_path, event).join()
+    # send_messagae(message_id, preserved_image_path, event).start()
+    # send_messagae(message_id, preserved_image_path, event).join()
+    send_messagae(message_id, preserved_image_path, event)
 
     # ▼ del picture
-    source_image_path.unlink()
+    atexit.del_picture(source_image_path)
 
 def public_attr(obj) -> List[str]:
     return [x for x in obj.__dir__() if not x.startswith("_")]
@@ -112,6 +115,10 @@ def send_messagae(message_id: str, preserved_image_path: str, event: str):
         event.reply_token,
         image_message
     )
+
+def del_picture(source_image_path):
+    source_image_path.unlink()
+    os.remove(source_image_path)
 
 if __name__ == "__main__":
     app.run()
