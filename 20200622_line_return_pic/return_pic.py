@@ -17,7 +17,7 @@ SOURCE_IMAGE_PATH = THIS_REPO + "/static/images/{}.jpg"
 PRESERVED_IMAGE_PATH = "/static/images/{}.jpg"
 
 # ▼ local
-local_path = "https://a5f57ab94dd1.ngrok.io"
+local_path = "https://9a27efc00d82.ngrok.io"
 # static_path = "___brbrbrbbrbrbrbrbbrbrbrbrb___"
 
 import configparser
@@ -91,11 +91,10 @@ def handle_image(event):
     send_messagae(message_id, preserved_image_path, event)
 
     # ▼ del picture
-    atexit.del_picture(source_image_path)
+    atexit.register(del_picture, source_image_path=source_image_path)
 
 def public_attr(obj) -> List[str]:
     return [x for x in obj.__dir__() if not x.startswith("_")]
-
 
 def save_image(message_id: str, save_path: str) -> None:
     message_content = line_bot_api.get_message_content(message_id)
