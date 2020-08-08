@@ -1,6 +1,7 @@
 window.onload = function() {
-    const useNodeJS = true;   // if you are not using a node server, set this value to false
-    const defaultLiffId = "";   // change the default LIFF value if you are not using a node server
+    // const useNodeJS = true;   // if you are not using a node server, set this value to false
+    const useNodeJS = false;   // if you are not using a node server, set this value to false
+    const defaultLiffId = "ここにLIFF ID を記入。";   // change the default LIFF value if you are not using a node server
 
     // DO NOT CHANGE THIS
     let myLiffId = "";
