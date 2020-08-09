@@ -35,7 +35,9 @@ ngrok http 5000
 ```
 
 ## ▼ LINE DevでMassaging APIを適宜設定する。
-詳細は省略。
+
+ - エンドポイントURLにngrokのURLを記載のこと。
+以下省略。
 
 ## ▼ [liff-starter.js]書き換える。
 ・下記2箇所
@@ -44,3 +46,9 @@ ngrok http 5000
 const useNodeJS = false;
 const defaultLiffId = "${ これ。LIFF IDをかく。 }";
 ```
+
+## △ これで一応、疎通までは確認できる。
+----------------------------------------------
+
+# ▼ （改造
+
