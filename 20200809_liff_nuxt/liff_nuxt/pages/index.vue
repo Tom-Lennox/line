@@ -1,10 +1,6 @@
 <template>
   <v-layout column justify-center align-center>
     <v-flex xs12 sm8 md6>
-      <div class="text-center">
-        <logo />
-        <vuetify-logo />
-      </div>
       <v-card>
         <v-card-title class="headline">
           Welcome to the Vuetify + Nuxt.js template
@@ -79,17 +75,82 @@
         </v-card-actions>
       </v-card>
     </v-flex>
+    <v-flex xs12 sm8 md6>
+      <section class="container">
+        <p class="line-id">LINE ID：{{ lineId }}</p>
+        <div class="form">
+          <div class="control">
+            <input
+              v-model="formData.name"
+              class="input"
+              type="text"
+              placeholder="お名前"
+            />
+          </div>
+          <button class="button is-info is-fullwidth" @click="onSubmit()">
+            送信する
+          </button>
+          <button class="button is-light is-fullwidth" @click="handleCancel()">
+            キャンセル
+          </button>
+        </div>
+      </section>
+    </v-flex>
   </v-layout>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
-
 export default {
-  components: {
-    Logo,
-    VuetifyLogo,
+  data() {
+    return {
+      formData: {
+        name: '',
+      },
+      lineId: null,
+    }
+  },
+  mounted() {
+    if (!this.canUseLIFF()) {
+      return
+    }
+
+    window.liff.init((data) => {
+      this.lineId = data.context.userId || null
+    })
+  },
+  methods: {
+    onSubmit() {
+      if (!this.canUseLIFF()) {
+        return
+      }
+
+      window.liff
+        .sendMessages([
+          {
+            type: 'text',
+            text: `お名前：\n${this.formData.name}`,
+          },
+          {
+            type: 'text',
+            text: '送信が完了しました',
+          },
+        ])
+        .then(() => {
+          window.liff.closeWindow()
+        })
+        .catch((e) => {
+          window.alert('Error sending message: ' + e)
+        })
+    },
+    handleCancel() {
+      if (!this.canUseLIFF()) {
+        return
+      }
+      window.liff.closeWindow()
+    },
+    canUseLIFF() {
+      return navigator.userAgent.includes('Line') && window.liff
+    },
   },
 }
 </script>

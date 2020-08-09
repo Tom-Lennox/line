@@ -28,6 +28,7 @@ export default {
       },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    script: [{ src: 'https://d.line-scdn.net/liff/1.0/sdk.js' }],
   },
   /*
    ** Global CSS
