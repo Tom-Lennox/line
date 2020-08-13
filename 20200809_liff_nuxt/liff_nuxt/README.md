@@ -21,5 +21,6 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 
 
 ## ▼ 個人的メモ
+npm i @nuxtjs/dotenv
 
-
+yarn add @line/liff

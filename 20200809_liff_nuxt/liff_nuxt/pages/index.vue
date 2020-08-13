@@ -1,7 +1,7 @@
 <template>
   <v-layout column justify-center align-center>
     <v-flex xs12 sm8 md6>
-      <v-card>
+      <!-- <v-card>
         <v-card-title class="headline">
           Welcome to the Vuetify + Nuxt.js template
         </v-card-title>
@@ -73,11 +73,12 @@
             Continue
           </v-btn>
         </v-card-actions>
-      </v-card>
+      </v-card> -->
     </v-flex>
     <v-flex xs12 sm8 md6>
       <section class="container">
         <p class="line-id">LINE ID：{{ lineId }}</p>
+        <pre>{{ $data }}</pre>
         <div class="form">
           <div class="control">
             <input
@@ -100,6 +101,9 @@
 </template>
 
 <script>
+import liff from '@line/liff'
+liff.init({ liffId: '1654657286-jvor2EQb' })
+
 export default {
   data() {
     return {
@@ -107,16 +111,20 @@ export default {
         name: '',
       },
       lineId: null,
+      profile: '',
+      getOS: '',
     }
   },
   mounted() {
-    if (!this.canUseLIFF()) {
-      return
-    }
-
-    window.liff.init((data) => {
-      this.lineId = data.context.userId || null
-    })
+    liff.login()
+    console.log('liff.isLoggedIn()', liff.isLoggedIn())
+    console.log('liff.getOS()', liff.getOS())
+    console.log('liff.getLanguage()', liff.getLanguage())
+    console.log('liff.getVersion()', liff.getVersion())
+    console.log('liff.isInClient()', liff.isInClient())
+    console.log('liff.isLoggedIn()', liff.isLoggedIn())
+    console.log('liff.getOS()', liff.getOS())
+    console.log('liff.getLineVersion()', liff.getLineVersion())
   },
   methods: {
     onSubmit() {
@@ -124,7 +132,7 @@ export default {
         return
       }
 
-      window.liff
+      liff
         .sendMessages([
           {
             type: 'text',
@@ -136,7 +144,7 @@ export default {
           },
         ])
         .then(() => {
-          window.liff.closeWindow()
+          liff.closeWindow()
         })
         .catch((e) => {
           window.alert('Error sending message: ' + e)
@@ -146,10 +154,10 @@ export default {
       if (!this.canUseLIFF()) {
         return
       }
-      window.liff.closeWindow()
+      liff.closeWindow()
     },
     canUseLIFF() {
-      return navigator.userAgent.includes('Line') && window.liff
+      return navigator.userAgent.includes('Line') && liff
     },
   },
 }
