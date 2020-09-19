@@ -11,14 +11,14 @@ from linebot.models import ImageMessage
 from linebot.models import ImageSendMessage
 
 import atexit
-import add_lgtm from add_lgtm
+from add_lgtm import add_lgtm
 
 THIS_REPO = "20200626_line_return_lgtm"
 SOURCE_IMAGE_PATH = THIS_REPO + "/static/images/{}.jpg"
 PRESERVED_IMAGE_PATH = "/static/images/{}.jpg"
 
 # ▼ local
-local_path = "https://43656e7f4170.ngrok.io"
+local_path = "https://cc262ff19d9b.ngrok.io"
 # static_path = "___brbrbrbbrbrbrbrbbrbrbrbrb___"
 
 import configparser
@@ -88,13 +88,15 @@ def handle_image(event):
     save_image(message_id, source_image_path)
 
     # ▼ 加工　modify image
-    add_lgtm(src=source_image_path, desc=Path(preserved_image_path).absolute())
-
+    # add_lgtm(src=source_image_path, desc=Path(preserved_image_path).absolute())
+    print("|||", source_image_path)
+    print("|||", Path(preserved_image_path).absolute())
+    
     # ▼ 送信　send image
     # I feel it's a bad idea to specify a 3rd argument.
     send_messagae(message_id, preserved_image_path, event)
 
-    # ▼ del picture
+    # ▼ 削除　del picture
     atexit.register(del_picture, source_image_path=source_image_path)
 
 def public_attr(obj) -> List[str]:

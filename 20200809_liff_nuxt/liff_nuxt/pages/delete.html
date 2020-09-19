@@ -1,0 +1,63 @@
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://obniz.io/js/jquery-3.2.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/dropbox@4.0.3/dist/Dropbox-sdk.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+</head>
+<body>
+<h3 id="bploading" style="text-align:center;">ロード中...</h3>
+<div id="OBNIZ_OUTPUT"></div><br/>
+
+  <script src="https://unpkg.com/obniz@latest/obniz.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/obniz-parts-kits@0.15.1/ui/index.js" crossorigin="anonymous"></script>
+
+
+<script>
+  $("#bploading").text("実行中");
+  (async function(){
+  var obniz, uart;
+  var dbx = new Dropbox.Dropbox({
+    accessToken: '8YH5b_7xH3oAAAAAAAAAAZVvhNM4nh2lwv79CqqQXaLfzbsMyFYh-e66gnhWtuEz',
+  })
+  
+  obniz = new Obniz('2146-5961');
+  await obniz.connectWait();
+  obniz.io10.output(true);
+  obniz.io11.output(false);
+  uart = obniz.getFreeUart();
+  uart.start({rx: 0, tx: 1, baud:9600}); //uartに接続
+  while (true) {
+    obniz.display.clear();
+    obniz.display.print("CO2:" + read_co2_concentration(uart) + "ppm");
+    await ObnizUI.Util.wait(2000);
+  }
+    
+  function read_co2_concentration(uart){
+    uart.send([0xFF,0x01,0x86,0x00,0x00,0x00,0x00,0x00,0x79]); //MH-Z19Bの読み出しコマンド
+    if(uart.isDataExists()) {
+      var data = uart.readBytes();
+      var co2 = data[2] * 255 + data[3];
+      if(data[0] == 255){
+        console.log(co2);
+        dbx.filesUpload({
+          path: '/obniz.txt',
+          contents: co2 + ',' + new Date() + '\n',
+          mode: 'overwrite',
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+        return data[2] * 255 + data[3];
+      }
+    }
+    return 0;
+  }
+  
+})();
+</script>
+</body>
+</html>

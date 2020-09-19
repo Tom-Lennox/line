@@ -113,10 +113,22 @@ export default {
       lineId: null,
       profile: '',
       getOS: '',
+      navigator: '',
     }
   },
   mounted() {
-    liff.login()
+    // if (!this.canUseLIFF()) {
+    //   return
+    // }
+    // if (!liff.isLoggedIn()) {
+    //   liff.login()
+    // }
+    this.userAgent = navigator.userAgent
+    console.log('navigator.userAgent', navigator.userAgent)
+    console.log(
+      'LIFF使用可否',
+      navigator.userAgent.includes('Line') && window.liff
+    )
     console.log('liff.isLoggedIn()', liff.isLoggedIn())
     console.log('liff.getOS()', liff.getOS())
     console.log('liff.getLanguage()', liff.getLanguage())
